@@ -4,11 +4,13 @@ import copy
 
 class Participant(object):
 
-    def __init__(self, lst=[]):
+    def __init__(self, lst=[], names=[]):
         self.scenario_list = lst
+        self.names = names
 
-    def add_scenario(self, dct):
+    def add_scenario(self, dct, name):
         self.scenario_list.append(dct)
+        self.names.append(name)
 
     def sum_scen_keys(self, scenario_number):
         flag = True
@@ -31,21 +33,25 @@ class Participant(object):
                 res.append(item)
         return res
 
-    def scens_to_list(self, scenatio_number, sum=True):
+    def scens_to_list(self, scenatio_number):
         lst = []
+        names = []
         for i in range(len(self.scenario_list)):
             if i != scenatio_number:
-                if sum:
-                    sum_lst = self.sum_scen_keys(i)
-                else:
-                    sum_lst = self.merge_scen_keys(i)
+                sum_lst = self.sum_scen_keys(i)
+                j = 0
                 for items in sum_lst:
                     lst.append(items)
-        res = ([], [])
+                    names.append(self.names[i] + ": " + str(j) + "/" + str(len(sum_lst) - 1))
+                    j += 1
+        number_of_contexts = len(self.scenario_list[scenatio_number]) - 1
+        names.append("context " + str(number_of_contexts))
+        res = ([], [], names)
         for key in self.scenario_list[scenatio_number]:
             res[1].append(self.scenario_list[scenatio_number][key])
             clst = copy.deepcopy(lst)
             clst.append(key)
+            clst = tuple(clst)
             res[0].append(clst)
         return res
 
