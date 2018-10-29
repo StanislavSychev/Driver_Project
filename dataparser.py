@@ -10,8 +10,8 @@ def check_ID( id):
     except ValueError:
         return False
 
-read_dir = "rawData"
-write_dir = "procData"
+read_dir = "rawData2"
+write_dir = "procData2"
 open_write_files = {}
 scenario_titles = {}
 files_list = listdir(read_dir)

@@ -1,5 +1,6 @@
 from os import listdir
 import pandas as pd
+import numpy
 
 
 def data_sifer(read_dir, write_dir, safe_distance1, safe_distance2, safe_distance3, safe_distance4, dec_distance):
@@ -15,11 +16,11 @@ def data_sifer(read_dir, write_dir, safe_distance1, safe_distance2, safe_distanc
                     data.set_value(i, 'Changeindistance', 0)
                 else:
                     data.set_value(i, 'Changeindistance', 1)
-            for i in range(0, data['Distancefromturnothercarsignals'].count()):
-                if data['Distancefromturnothercarsignals'].ix[i] > dec_distance:
-                    data.set_value(i, 'Distancefromturnothercarsignals', 1)
-                else:
-                    data.set_value(i, 'Distancefromturnothercarsignals', 0)
+            #for i in range(0, data['Distancefromturnothercarsignals'].count()):
+            #    if data['Distancefromturnothercarsignals'].ix[i] > dec_distance:
+            #        data.set_value(i, 'Distancefromturnothercarsignals', 1)
+            #    else:
+            #        data.set_value(i, 'Distancefromturnothercarsignals', 0)
 
 
         #if files == "Communication_1.csv":
@@ -33,10 +34,12 @@ def data_sifer(read_dir, write_dir, safe_distance1, safe_distance2, safe_distanc
                     data.set_value(i, 'Meanacceleration', 1)
                 else:
                     data.set_value(i, 'Meanacceleration', 0)
-                if data['Distancetocarahead'].ix[i] == 'inf':
-                    data.set_value(i, 'Distancetocarahead', 1)
+                if data['Distancetocarahead'].ix[i] == numpy.Inf:
+                    #print 'inf'
+                    data.set_value(i, 'Distancetocarahead', -1)
                 else:
-                    data.set_value(i, 'Distancetocarahead', 0)
+                    pass
+                    #data.set_value(i, 'Distancetocarahead', 0)
 
         if files == "Contagion_2.csv":
             #data = data[['ParticipantID', 'Meanacceleration']]

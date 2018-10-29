@@ -13,7 +13,7 @@ def make_part_list():
     flag = True
     part_list = {}
     scen_list = []
-    ScenariosRader.scen_read("ScenariosFiles", "procData", "ParsedData", 1.5, 1.5, 1.5, 1.5, 20)
+    ScenariosRader.scen_read("ScenariosFiles", "procData2", "ParsedData", 1.5, 1.5, 1.5, 1.5, 20)
     for files in listdir("ParsedData"):
         name = files[:-4:]
         scen_list.append(name)
@@ -42,6 +42,7 @@ scens = data['scen']
 data = data['data']
 X_dict = {}
 Y_dict = {}
+feat_imp = {}
 for i in range(len(scens)):
     accuracy = 0
     ac_list = []
@@ -80,11 +81,37 @@ for i in range(len(scens)):
         err += (item - accuracy) ** 2
     err = (err ** 0.5) / len(X_dict)
     print scens[i] + ': ' + '%.2f' % accuracy + '\t%.2f' % err
-    if scens[i] == 'Communication_1':
-        dot_data = StringIO()
-        eg = export_graphviz(dtr, out_file=dot_data,
-                        filled=True, rounded=True,
-                        special_characters=True,
-                        feature_names=names)
-        graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
-        graph.write_png('ID3.png')
+    importance_list = dtr.feature_importances_
+    imp_dct = {}
+    for name, imp in zip(names, importance_list):
+        if name[-2] == '/':
+            key = name[:-5:]
+            if key not in imp_dct.keys():
+                imp_dct[key] = 0
+            imp_dct[key] += imp
+
+        else:
+            imp_dct[name] = imp
+    #print scens[i]
+    if sum(importance_list):
+        lst = [(k, imp_dct[k]) for k in imp_dct]
+        lst.sort(key=lambda x: x[1], reverse=True)
+        #for item in lst:
+            #print "\t" + item[0] + ": " + '%.2f' % item[1]
+        feat_imp[scens[i]] = lst
+    else:
+        feat_imp[scens[i]] = []
+        #print "No tree"
+
+for keys in feat_imp:
+    print keys
+    for item in feat_imp[keys]:
+        print "\t" + item[0] + ": " + '%.2f' % item[1]
+    #print dtr.feature_importances_
+    #dot_data = StringIO()
+    #eg = export_graphviz(dtr,   out_file=dot_data,
+    #                            filled=True, rounded=True,
+    #                            special_characters=True,
+    #                            feature_names=names)
+    #graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
+    #graph.write_png(scens[i] + 'ID3.png')

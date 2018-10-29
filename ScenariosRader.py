@@ -22,9 +22,10 @@ def scen_read(scen_dir, read_dir, write_dir, safe_distance1, safe_distance2, saf
         w.write("id,con,out\n")
         for i in range(con_data.shape[0]):
             if context:
-                for j in range(un_con.shape[0]):
-                    if con_data.ix[i].equals(un_con.ix[j]):
-                        w.write(str(pid.ix[i]) + "," + str(j) + ",")
+                s_con = ""
+                for item in context:
+                    s_con = s_con + item + " " + str(con_data[item].ix[i]) + " "
+                w.write(str(pid.ix[i]) + "," + s_con + ",")
             else:
                 w.write(str(pid.ix[i]) + ",0,")
             for j in range(un_out.shape[0]):
