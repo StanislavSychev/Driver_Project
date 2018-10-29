@@ -45,14 +45,30 @@ class Participant(object):
                     names.append(self.names[i] + ": " + str(j) + "/" + str(len(sum_lst) - 1))
                     j += 1
         number_of_contexts = len(self.scenario_list[scenatio_number]) - 1
-        names.append("context " + str(number_of_contexts))
-        res = ([], [], names)
+
+        #names.append("context " + str(number_of_contexts))
+        #res = ([], [], names)
+        res0 = []
+        res1 = []
+        flag = True
         for key in self.scenario_list[scenatio_number]:
-            res[1].append(self.scenario_list[scenatio_number][key])
+            res1.append(self.scenario_list[scenatio_number][key])
             clst = copy.deepcopy(lst)
-            clst.append(key)
+            #print len(self.scenario_list[scenatio_number])
+            try:
+                scen_lst = key.split()
+                if flag:
+                    flag = False
+                    for i in range(len(scen_lst) / 2):
+                        names.append(scen_lst[2 * i])
+                for i in range(len(scen_lst) / 2):
+                    clst.append(scen_lst[2 * i + 1])
+            except AttributeError:
+                pass
+            #clst.append(key)
             clst = tuple(clst)
-            res[0].append(clst)
+            res0.append(clst)
+            res = (res0, res1, names)
         return res
 
     def normolise(self):
