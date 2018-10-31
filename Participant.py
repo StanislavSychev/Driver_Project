@@ -84,4 +84,3 @@ class Participant(object):
         for i in range(len(res[1])):
             res[1][i] = res[1][i].index(max(res[1][i]))
         return res
-
