@@ -9,26 +9,41 @@ from sklearn.tree import export_graphviz
 import pydotplus
 
 
+def make_id_list(dir):
+    res = []
+    for files in listdir(dir):
+        data = pandas.read_csv(dir + "/" + files)
+        ids = data['id'].unique()
+        for id in ids:
+            if id not in res:
+                res.append(id)
+    return res
+
+
 def make_part_list():
     flag = True
     part_list = {}
     scen_list = []
-    ScenariosRader.scen_read("ScenariosFiles", "procData2", "ParsedData", 1.5, 1.5, 1.5, 1.5, 20)
+    sourse_dir = "ParsedData"
+    ScenariosRader.scen_read("ScenariosFiles", "procData", sourse_dir, 1.5, 1.5, 1.5, 1.5, 20)
+    uniqe_id = make_id_list(sourse_dir)
     for files in listdir("ParsedData"):
         name = files[:-4:]
         scen_list.append(name)
         res = {}
         data = pandas.read_csv("ParsedData/" + files)
         lst_len = data['out'].unique().shape[0]
-        for un in data['id'].unique():
+        for un in uniqe_id:
             if flag:
                 part_list[un] = Participant([], [])
             res[un] = {}
-            for con in data['con'].unique():
-                res[un][con] = [0] * lst_len
+            #for con in data['con'].unique():
+            #    res[un][con] = [0] * lst_len
         if flag:
             flag = False
         for i in range(data.shape[0]):
+            if data['con'].ix[i] not in res[data['id'].ix[i]]:
+                res[data['id'].ix[i]][data['con'].ix[i]] = [0] * lst_len
             res[data['id'].ix[i]][data['con'].ix[i]][data['out'].ix[i]] += 1
         for key in res:
             part_list[key].add_scenario(res[key], name)
@@ -49,9 +64,10 @@ for i in range(len(scens)):
     for keys in data:
         #XY = data[keys].scens_to_list(i)
         XY = data[keys].most_prob(i)
-        X_dict[keys] = XY[0]
-        Y_dict[keys] = XY[1]
-        names = XY[2]
+        if XY:
+            X_dict[keys] = XY[0]
+            Y_dict[keys] = XY[1]
+            names = XY[2]
     for key in X_dict:
         X_train = []
         Y_train = []
@@ -63,6 +79,8 @@ for i in range(len(scens)):
                     Y_train.append(lst)
         X_test = X_dict[key]
         Y_test = Y_dict[key]
+        #for lst_it in X_train:
+        #    print len(lst_it)
         #print len(names)
         #print len(X_test[0])
         #X_train = pandas.DataFrame.from_records(X_train, columns=names)

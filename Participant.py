@@ -14,6 +14,8 @@ class Participant(object):
 
     def sum_scen_keys(self, scenario_number):
         flag = True
+        if not self.scenario_list[scenario_number]:
+            return None
         s = float(len(self.scenario_list[scenario_number]))
         for keys in self.scenario_list[scenario_number]:
             if flag:
@@ -39,6 +41,9 @@ class Participant(object):
         for i in range(len(self.scenario_list)):
             if i != scenatio_number:
                 sum_lst = self.sum_scen_keys(i)
+                if not sum_lst:
+                    return None
+                #print len(sum_lst)
                 j = 0
                 for items in sum_lst:
                     lst.append(items)
@@ -52,23 +57,21 @@ class Participant(object):
         res1 = []
         flag = True
         for key in self.scenario_list[scenatio_number]:
-            res1.append(self.scenario_list[scenatio_number][key])
-            clst = copy.deepcopy(lst)
-            #print len(self.scenario_list[scenatio_number])
-            try:
-                scen_lst = key.split()
-                if flag:
-                    flag = False
+            if sum(self.scenario_list[scenatio_number][key]):
+                res1.append(self.scenario_list[scenatio_number][key])
+                clst = copy.deepcopy(lst)
+                try:
+                    scen_lst = key.split()
+                    if flag:
+                        flag = False
+                        for i in range(len(scen_lst) / 2):
+                            names.append(scen_lst[2 * i])
                     for i in range(len(scen_lst) / 2):
-                        names.append(scen_lst[2 * i])
-                for i in range(len(scen_lst) / 2):
-                    clst.append(scen_lst[2 * i + 1])
-            except AttributeError:
-                pass
-            #clst.append(key)
-            clst = tuple(clst)
-            res0.append(clst)
-            res = (res0, res1, names)
+                        clst.append(float(scen_lst[2 * i + 1]))
+                except AttributeError:
+                    pass
+                res0.append(clst)
+        res = (res0, res1, names)
         return res
 
     def normolise(self):
@@ -81,6 +84,8 @@ class Participant(object):
 
     def most_prob(self, scenario_number):
         res = self.scens_to_list(scenario_number)
+        if not res:
+            return res
         for i in range(len(res[1])):
             res[1][i] = res[1][i].index(max(res[1][i]))
         return res
