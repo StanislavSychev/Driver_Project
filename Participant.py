@@ -72,6 +72,8 @@ class Participant(object):
                     pass
                 res0.append(clst)
         res = (res0, res1, names)
+        if not res0:
+            return None
         return res
 
     def normolise(self):

@@ -27,11 +27,12 @@ def make_part_list():
     sourse_dir = "ParsedData"
     ScenariosRader.scen_read("ScenariosFiles", "procData", sourse_dir, 1.5, 1.5, 1.5, 1.5, 20)
     uniqe_id = make_id_list(sourse_dir)
-    for files in listdir("ParsedData"):
-        name = files[:-4:]
+    for files in listdir("ScenariosFiles"):
+        #name = files[:-4:]
+        name = files
         scen_list.append(name)
         res = {}
-        data = pandas.read_csv("ParsedData/" + files)
+        data = pandas.read_csv("ParsedData/" + files + ".csv")
         lst_len = data['out'].unique().shape[0]
         for un in uniqe_id:
             if flag:
@@ -90,6 +91,9 @@ for i in range(len(scens)):
         ac = 0
         for x_test, y_test in zip(X_test, Y_test):
             ac += dtr.score([x_test], [y_test])
+        if len(X_test) == 0:
+            print scens[i]
+            print Y_test
         ac = ac / len(X_test)
         ac_list.append(ac)
         accuracy += ac
