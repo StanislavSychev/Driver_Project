@@ -48,6 +48,9 @@ def data_sifer(read_dir, write_dir, safe_distance1, safe_distance2, safe_distanc
                     data.set_value(i, 'Meanacceleration', 0)
                 else:
                     data.set_value(i, 'Meanacceleration', 1)
+                if data['Distancetocarbehind'].ix[i] == numpy.Inf:
+                    #print 'inf'
+                    data.set_value(i, 'Distancetocarbehind', -1)
 
         if files == "Cooperation_1.csv":
             for i in range(0, data['Accelerationrate'].count()):

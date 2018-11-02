@@ -25,7 +25,7 @@ def make_part_list():
     part_list = {}
     scen_list = []
     sourse_dir = "ParsedData"
-    ScenariosRader.scen_read("ScenariosFiles", "procData", sourse_dir, 1.5, 1.5, 1.5, 1.5, 20)
+    ScenariosRader.scen_read("ScenariosFiles", "procData2", sourse_dir, 1.5, 1.5, 1.5, 1.5, 20)
     uniqe_id = make_id_list(sourse_dir)
     for files in listdir("ScenariosFiles"):
         #name = files[:-4:]
@@ -97,6 +97,9 @@ for i in range(len(scens)):
         ac = ac / len(X_test)
         ac_list.append(ac)
         accuracy += ac
+    if not len(X_dict):
+        print scens[i]
+        print X_dict
     accuracy = accuracy / len(X_dict)
     err = 0.0
     for item in ac_list:
