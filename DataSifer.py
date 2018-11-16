@@ -3,7 +3,7 @@ import pandas as pd
 import numpy
 
 
-def data_sifer(read_dir, write_dir, safe_distance1, safe_distance2, safe_distance3, safe_distance4, dec_distance):
+def data_sifer(read_dir, write_dir, safe_distance1, safe_distance2, safe_distance3, safe_distance4):
 
     for files in listdir(read_dir):
         read_file_path = read_dir + "/" + files

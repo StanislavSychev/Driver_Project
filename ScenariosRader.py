@@ -2,9 +2,9 @@ import DataSifer
 from os import listdir
 import pandas
 
-def scen_read(scen_dir, read_dir, write_dir, safe_distance1, safe_distance2, safe_distance3, safe_distance4, dec_distance):
+def scen_read(scen_dir, read_dir, write_dir, safe_distance1, safe_distance2, safe_distance3, safe_distance4):
     temp_dir = "tmp"
-    DataSifer.data_sifer(read_dir, temp_dir, safe_distance1, safe_distance2, safe_distance3, safe_distance4, dec_distance)
+    DataSifer.data_sifer(read_dir, temp_dir, safe_distance1, safe_distance2, safe_distance3, safe_distance4)
     for files in listdir(scen_dir):
         f = open(scen_dir + "/" +files, "r")
         outputs = f.readline().split()

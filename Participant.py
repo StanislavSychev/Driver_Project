@@ -1,16 +1,18 @@
-
 import copy
+import numpy as np
 
 
 class Participant(object):
 
-    def __init__(self, lst=[], names=[]):
+    def __init__(self, lst=[], names=[], leng = []):
         self.scenario_list = lst
         self.names = names
+        self.scenario_len = leng
 
-    def add_scenario(self, dct, name):
+    def add_scenario(self, dct, name, len_dtc):
         self.scenario_list.append(dct)
         self.names.append(name)
+        self.scenario_len.append(len_dtc)
 
     def sum_scen_keys(self, scenario_number):
         flag = True
@@ -42,7 +44,9 @@ class Participant(object):
             if i != scenatio_number:
                 sum_lst = self.sum_scen_keys(i)
                 if not sum_lst:
-                    return None
+                    sum_lst = [-1] * self.scenario_len[i]
+                if len(sum_lst) != self.scenario_len[i]:
+                    print "wtf"
                 #print len(sum_lst)
                 j = 0
                 for items in sum_lst:
@@ -72,6 +76,8 @@ class Participant(object):
                     pass
                 res0.append(clst)
         res = (res0, res1, names)
+        if not res1:
+            return None
         if not res0:
             return None
         return res
