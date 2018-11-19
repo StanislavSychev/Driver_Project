@@ -56,6 +56,7 @@ data = make_part_list()
 scens = data['scen']
 data = data['data']
 feat_imp = {}
+acc_res = {}
 for i in range(len(scens)):
     accuracy = 0
     ac_list = []
@@ -130,7 +131,7 @@ for i in range(len(scens)):
     graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
     graph.write_png(scens[i] + 'ID3.png')
 
-    print scens[i] + ': ' + '%.2f' % accuracy + '\t%.2f' % err
+    acc_res[scens[i]] = scens[i] + ': ' + '%.2f' % accuracy + '\t%.2f' % err
     importance_list = dtr.feature_importances_
     imp_dct = {}
     for name, imp in zip(names, importance_list):
@@ -152,7 +153,8 @@ for i in range(len(scens)):
     else:
         feat_imp[scens[i]] = []
         #print "No tree"
-
+for keys in acc_res:
+    print acc_res[keys]
 for keys in feat_imp:
     print keys
     for item in feat_imp[keys]:
