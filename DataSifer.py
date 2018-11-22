@@ -66,20 +66,28 @@ def data_sifer(read_dir, write_dir, safe_distance1, safe_distance2, safe_distanc
 
         if files == "Trust_1.csv":
             #data = data[['ParticipantID', 'Distancetocarbehind']]
+            data = data[data.Distancetocarbehind != numpy.Inf]
+            data.index = range(data.shape[0])
             for i in range(0, data['Distancetocarbehind'].count()):
                 if data['Distancetocarbehind'].ix[i] > safe_distance1:
                     data.set_value(i, 'Distancetocarbehind', 1)
                 else:
                     data.set_value(i, 'Distancetocarbehind', 0)
 
+
         if files == "Trust_2.csv":
             #data = data[['ParticipantID', 'Distancetocarbehind', 'Distancetocarahead']]
+            data = data[data.Distancetocarbehind != numpy.Inf]
+            data = data[data.Distancetocarahead != numpy.Inf]
+            data.index = range(data.shape[0])
             for i in range(0, data['Distancetocarbehind'].count()):
                 if data['Distancetocarbehind'].ix[i] > safe_distance2:
                     data.set_value(i, 'Distancetocarbehind', 1)
                 else:
                     data.set_value(i, 'Distancetocarbehind', 0)
             for i in range(0, data['Distancetocarahead'].count()):
+                if data['Distancetocarahead'].ix[i] == numpy.Inf:
+                    data.drop(i)
                 if data['Distancetocarahead'].ix[i] > safe_distance2:
                     data.set_value(i, 'Distancetocarahead', 1)
                 else:

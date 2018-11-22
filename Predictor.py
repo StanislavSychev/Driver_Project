@@ -9,7 +9,16 @@ from sklearn.tree import export_graphviz
 import pydotplus
 from sklearn.preprocessing import Imputer
 from DataPreparator import make_part_list
+from sklearn.svm import SVC
 
+def get_score(predictor, x_train, y_train, x_test, y_test):
+    if len(np.unique(y_train)) == 1:
+        return 0
+    predictor.fit(x_train, y_train)
+    ac = 0
+    for x, y in zip(x_test, y_test):
+        ac += pred.score([x], [y])
+    return ac / len(x_test)
 
 data = make_part_list()
 scens = data['scen']
@@ -62,60 +71,16 @@ for i in range(len(scens)):
         #print len(names)
         #X_train = pandas.DataFrame.from_records(X_train, columns=names)
         #dtr = DecisionTreeRegressor()
-        dtr = DecisionTreeClassifier()
-        dtr.fit(X_train, Y_train)
-        ac = 0
-        for x_test, y_test in zip(X_test, Y_test):
-            ac += dtr.score([x_test], [y_test])
-        if len(X_test) == 0:
-            print scens[i]
-            print Y_test
-        ac = ac / len(X_test)
+        pred = SVC()
+        ac = get_score(pred, X_train, Y_train, X_test, Y_test)
         ac_list.append(ac)
         accuracy += ac
-    if not len(X_dict):
-        print scens[i]
-        print X_dict
     accuracy = accuracy / len(X_dict)
     err = 0.0
     for item in ac_list:
         err += (item - accuracy) ** 2
     err = (err ** 0.5) / len(X_dict)
-
-    dot_data = StringIO()
-    eg = export_graphviz(dtr, out_file=dot_data,
-                         filled=True, rounded=True,
-                         special_characters=True,
-                         feature_names=names)
-    graph = pydotplus.graph_from_dot_data(dot_data.getvalue())
-    graph.write_png(scens[i] + 'ID3.png')
-
     acc_res[scens[i]] = scens[i] + ': ' + '%.2f' % accuracy + '\t%.2f' % err
-    importance_list = dtr.feature_importances_
-    imp_dct = {}
-    for name, imp in zip(names, importance_list):
-        if name[-2] == '/':
-            key = name[:-5:]
-            if key not in imp_dct.keys():
-                imp_dct[key] = 0
-            imp_dct[key] += imp
 
-        else:
-            imp_dct[name] = imp
-    #print scens[i]
-    if sum(importance_list):
-        lst = [(k, imp_dct[k]) for k in imp_dct]
-        lst.sort(key=lambda x: x[1], reverse=True)
-        #for item in lst:
-            #print "\t" + item[0] + ": " + '%.2f' % item[1]
-        feat_imp[scens[i]] = lst
-    else:
-        feat_imp[scens[i]] = []
-        #print "No tree"
 for keys in acc_res:
     print acc_res[keys]
-for keys in feat_imp:
-    print keys
-    for item in feat_imp[keys]:
-        print "\t" + item[0] + ": " + '%.2f' % item[1]
-
