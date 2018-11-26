@@ -3,6 +3,7 @@ import pandas
 import ScenariosRader
 from Participant import Participant
 
+
 def make_id_list(drc):
     res = []
     for files in listdir(drc):
@@ -15,6 +16,7 @@ def make_id_list(drc):
 
 
 def make_part_list():
+    qest_data = False
     flag = True
     part_list = {}
     scen_list = []
@@ -43,4 +45,14 @@ def make_part_list():
             part_list[key].add_scenario(res[key], name_list, lst_len)
     for key in part_list:
         part_list[key].normolise()
+    driver_data = pandas.read_csv("questionnaireData/pre.csv")
+    if qest_data:
+        neded_keys = ['drive_exp', 'drive_freq']
+        for key in part_list:
+            dct = driver_data[driver_data.ID == key].to_dict(orient='index')
+            dct = dct[dct.keys()[0]]
+            need_val = {}
+            for n_key in neded_keys:
+                need_val[n_key] = dct[n_key]
+            part_list[key].set_data(need_val)
     return {'data': part_list, 'scen': scen_list}

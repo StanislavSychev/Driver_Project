@@ -10,10 +10,11 @@ import pydotplus
 from sklearn.preprocessing import Imputer
 from DataPreparator import make_part_list
 from sklearn.svm import SVC
+from sklearn.naive_bayes import GaussianNB
 
 def get_score(predictor, x_train, y_train, x_test, y_test):
     if len(np.unique(y_train)) == 1:
-        return 0
+        return -1
     predictor.fit(x_train, y_train)
     ac = 0
     for x, y in zip(x_test, y_test):
@@ -71,7 +72,9 @@ for i in range(len(scens)):
         #print len(names)
         #X_train = pandas.DataFrame.from_records(X_train, columns=names)
         #dtr = DecisionTreeRegressor()
+
         pred = SVC()
+        #pred = GaussianNB()
         ac = get_score(pred, X_train, Y_train, X_test, Y_test)
         ac_list.append(ac)
         accuracy += ac

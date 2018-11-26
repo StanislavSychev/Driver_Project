@@ -4,10 +4,14 @@ import numpy as np
 
 class Participant(object):
 
-    def __init__(self, lst=[], names=[], leng = []):
+    def __init__(self, lst=[], names=[], leng=[], driver_data={}):
         self.scenario_list = lst
         self.names = names
         self.scenario_len = leng
+        self.driver_data = driver_data.copy()
+
+    def set_data(self, data):
+        self.driver_data = data.copy()
 
     def add_scenario(self, dct, name, len_dtc):
         self.scenario_list.append(dct)
@@ -60,6 +64,9 @@ class Participant(object):
         res0 = []
         res1 = []
         flag = True
+        for name_key in self.driver_data:
+            names.append(name_key)
+            lst.append(self.driver_data[name_key])
         for key in self.scenario_list[scenatio_number]:
             if sum(self.scenario_list[scenatio_number][key]):
                 res1.append(self.scenario_list[scenatio_number][key])

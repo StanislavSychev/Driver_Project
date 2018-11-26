@@ -1,8 +1,5 @@
-from os import listdir
-import pandas
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
-import ScenariosRader
 from Participant import Participant
 from sklearn.externals.six import StringIO
 from sklearn.tree import export_graphviz
