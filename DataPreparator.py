@@ -16,12 +16,12 @@ def make_id_list(drc):
 
 
 def make_part_list():
-    qest_data = False
+    qest_data = True
     flag = True
     part_list = {}
     scen_list = []
     sourse_dir = "ParsedData"
-    ScenariosRader.scen_read("ScenariosFiles", "procData2", sourse_dir, 20, 20, 10, 20)
+    ScenariosRader.scen_read("ScenariosFiles", "procData", sourse_dir, 20, 20, 10, 20)
     uniqe_id = make_id_list(sourse_dir)
     for files in listdir("ScenariosFiles"):
         name_list = files
@@ -45,14 +45,19 @@ def make_part_list():
             part_list[key].add_scenario(res[key], name_list, lst_len)
     for key in part_list:
         part_list[key].normolise()
-    driver_data = pandas.read_csv("questionnaireData/pre.csv")
     if qest_data:
-        neded_keys = ['drive_exp', 'drive_freq']
+        driver_data = pandas.read_csv("questionnaireData/preQuestionnaire.csv")
+        driver_data = driver_data.fillna(0)
+        driver_data = driver_data.replace({'gender': r'^[f|F].*'}, {'gender': 1}, regex=True)
+        driver_data = driver_data.replace({'gender': r'^[m|M].*'}, {'gender': 2}, regex=True)
+        driver_data = driver_data.replace({'gender': r'^h.*'}, {'gender': 0}, regex=True)
+        # neded_keys = ['drive_exp', 'drive_freq']
         for key in part_list:
             dct = driver_data[driver_data.ID == key].to_dict(orient='index')
             dct = dct[dct.keys()[0]]
-            need_val = {}
-            for n_key in neded_keys:
-                need_val[n_key] = dct[n_key]
-            part_list[key].set_data(need_val)
+            # need_val = {}
+            # for n_key in neded_keys:
+            #     need_val[n_key] = dct[n_key]
+            # part_list[key].set_data(need_val)
+            part_list[key].set_data(dct)
     return {'data': part_list, 'scen': scen_list}

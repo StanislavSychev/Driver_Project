@@ -1,14 +1,16 @@
 from os import listdir, remove, path
 import numpy as np
 
-def check_ID( id):
+
+def check_id(driver_id):
     try:
-        id_num = float(id)
+        id_num = float(driver_id)
         if id_num > 100:
             return False
         return True
     except ValueError:
         return False
+
 
 read_dir = "rawData2"
 write_dir = "procData2"
@@ -18,6 +20,7 @@ files_list = listdir(read_dir)
 for files in listdir(write_dir):
     remove(write_dir+'/'+files)
 print files_list
+ParticipantID = 0
 for files in files_list:
     dataf = open(read_dir + "/" + files, "r")
     s = dataf.readline()
@@ -31,8 +34,8 @@ for files in files_list:
         if current_ent == int(s[0]):
             string_list.append(s)
         else:
-            if (string_list[1][2] == "Completed"):
-                if check_ID(ParticipantID):
+            if string_list[1][2] == "Completed":
+                if check_id(ParticipantID):
                     if string_list[1][1] == "2Scenario":
                         string_list[1][1] = "Scenario"
                     Scenario = string_list[1][3]
@@ -41,17 +44,17 @@ for files in files_list:
                     for lists in string_list:
                         last = lists.pop()
                         key = ''.join(lists[1:])
-                        if (key == "Other"):
+                        if key == "Other":
                             key = "Othercollider"
                             last = "nothing"
-                        if (key == "Car"):
+                        if key == "Car":
                             if (Scenario == "Trust_1") or (Scenario == "Contagion_2"):
                                 key = "Carbehind"
                                 last = "nothing"
                             else:
                                 key = "Carahead"
                                 last = "nothing"
-                        if (key == "Carinadjacent"):
+                        if key == "Carinadjacent":
                             key = "Carinadjacentlane"
                             last = "nothing"
                         value_dict[key] = last
@@ -88,12 +91,12 @@ for files in files_list:
                             column_val = str(np.Inf)
                         if Scenario == "Cooperation_2":
                             if (column_names == "Whowentfirst") or (column_names == "Whoshouldgofirst"):
-                                if (column_val.find('Human') != -1):
+                                if column_val.find('Human') != -1:
                                     column_val = "1"
                                 else:
                                     column_val = "0"
                         writef.write(";" + column_val)
-            elif (current_ent == 2):
+            elif current_ent == 2:
                 ParticipantID = string_list[3][2]
             string_list = [s]
             current_ent = int(s[0])

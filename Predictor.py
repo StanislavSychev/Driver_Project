@@ -1,25 +1,21 @@
-from os import listdir
-import pandas
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
-import ScenariosRader
-from Participant import Participant
-from sklearn.externals.six import StringIO
-from sklearn.tree import export_graphviz
-import pydotplus
-from sklearn.preprocessing import Imputer
+from sklearn.impute import SimpleImputer
 from DataPreparator import make_part_list
 from sklearn.svm import SVC
-from sklearn.naive_bayes import GaussianNB
+# from sklearn.naive_bayes import GaussianNB
+from sklearn.model_selection import KFold
+
 
 def get_score(predictor, x_train, y_train, x_test, y_test):
     if len(np.unique(y_train)) == 1:
         return -1
     predictor.fit(x_train, y_train)
-    ac = 0
+    ac_score = 0
     for x, y in zip(x_test, y_test):
-        ac += pred.score([x], [y])
-    return ac / len(x_test)
+        ac_score += pred.score([x], [y])
+    return ac_score / len(x_test)
+
 
 data = make_part_list()
 scens = data['scen']
@@ -33,48 +29,46 @@ for i in range(len(scens)):
     Y_dict = {}
     names = []
     for keys in data:
-        #XY = data[keys].scens_to_list(i)
+        # XY = data[keys].scens_to_list(i)
         XY = data[keys].most_prob(i)
         if XY:
             X_dict[keys] = XY[0]
             Y_dict[keys] = XY[1]
             names = XY[2]
-    for key in X_dict:
+    driver_keys = X_dict.keys()
+    kf = KFold(n_splits=10)
+    kf.get_n_splits(driver_keys)
+    dtr = DecisionTreeClassifier()
+    for train, test in kf.split(driver_keys):
+        test_keys = [driver_keys[i_test] for i_test in test.tolist()]
+        train_keys = [driver_keys[i_train] for i_train in train.tolist()]
         X_train = []
         Y_train = []
+        X_test = []
+        Y_test = []
         for keys in X_dict:
-            if keys != key:
+            if keys in train_keys:
                 for lst in X_dict[keys]:
                     X_train.append(lst)
                 for lst in Y_dict[keys]:
                     Y_train.append(lst)
-        X_test = X_dict[key]
-        Y_test = Y_dict[key]
+            else:
+                for lst in X_dict[keys]:
+                    X_test.append(lst)
+                for lst in Y_dict[keys]:
+                    Y_test.append(lst)
 
-        #print scens[i]
-        #print len(X_test[0])
-        imp = Imputer(missing_values=-1, strategy='mean')
+        # print scens[i]
+        # print len(X_test[0])
+        imp = SimpleImputer(missing_values=-1, strategy='mean')
         X_train.append([0]*len(X_train[0]))
         imp.fit(X_train)
         X_train = imp.transform(X_train)
         X_train = X_train[:-1:]
-        #imp.fit(X_test)
+        # imp.fit(X_test)
         X_test = imp.transform(X_test)
-
-        #if scens[i] == "Trust_3":
-            #print names
-            #print len(names)
-            #for it in X_train:
-                #print it
-                #print len(it)
-        #print X_test[0]
-        #print X_train
-        #print len(names)
-        #X_train = pandas.DataFrame.from_records(X_train, columns=names)
-        #dtr = DecisionTreeRegressor()
-
         pred = SVC()
-        #pred = GaussianNB()
+        # pred = GaussianNB()
         ac = get_score(pred, X_train, Y_train, X_test, Y_test)
         ac_list.append(ac)
         accuracy += ac

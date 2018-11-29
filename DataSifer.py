@@ -10,46 +10,44 @@ def data_sifer(read_dir, write_dir, safe_distance1, safe_distance2, safe_distanc
         write_file_path = write_dir + "/" + files
         data = pd.read_csv(read_file_path, sep=';')
         if files == "Attention_1.csv":
-            #data = data[['ParticipantID', 'Endedwithcollision', 'Changeindistance']]
+            # data = data[['ParticipantID', 'Endedwithcollision', 'Changeindistance']]
             for i in range(0, data['Changeindistance'].count()):
                 if data['Changeindistance'].ix[i] > 0:
                     data.set_value(i, 'Changeindistance', 0)
                 else:
                     data.set_value(i, 'Changeindistance', 1)
-            #for i in range(0, data['Distancefromturnothercarsignals'].count()):
-            #    if data['Distancefromturnothercarsignals'].ix[i] > dec_distance:
-            #        data.set_value(i, 'Distancefromturnothercarsignals', 1)
-            #    else:
-            #        data.set_value(i, 'Distancefromturnothercarsignals', 0)
+            # for i in range(0, data['Distancefromturnothercarsignals'].count()):
+            #     if data['Distancefromturnothercarsignals'].ix[i] > dec_distance:
+            #         data.set_value(i, 'Distancefromturnothercarsignals', 1)
+            #     else:
+            #         data.set_value(i, 'Distancefromturnothercarsignals', 0)
 
-
-        #if files == "Communication_1.csv":
-            #data = data[['ParticipantID', 'Endedwithcollision', 'Signalled', 'Turndirection']]
-
+        # if files == "Communication_1.csv":
+            # data = data[['ParticipantID', 'Endedwithcollision', 'Signalled', 'Turndirection']]
 
         if files == "Contagion_1.csv":
-            #data = data[['ParticipantID', 'Meanacceleration']]
+            # data = data[['ParticipantID', 'Meanacceleration']]
             for i in range(0, data['Meanacceleration'].count()):
                 if data['Meanacceleration'].ix[i] > 0:
                     data.set_value(i, 'Meanacceleration', 1)
                 else:
                     data.set_value(i, 'Meanacceleration', 0)
                 if data['Distancetocarahead'].ix[i] == numpy.Inf:
-                    #print 'inf'
+                    # print 'inf'
                     data.set_value(i, 'Distancetocarahead', -1)
                 else:
                     pass
-                    #data.set_value(i, 'Distancetocarahead', 0)
+                    # data.set_value(i, 'Distancetocarahead', 0)
 
         if files == "Contagion_2.csv":
-            #data = data[['ParticipantID', 'Meanacceleration']]
+            # data = data[['ParticipantID', 'Meanacceleration']]
             for i in range(0, data['Meanacceleration'].count()):
                 if data['Meanacceleration'].ix[i] > 0:
                     data.set_value(i, 'Meanacceleration', 0)
                 else:
                     data.set_value(i, 'Meanacceleration', 1)
                 if data['Distancetocarbehind'].ix[i] == numpy.Inf:
-                    #print 'inf'
+                    # print 'inf'
                     data.set_value(i, 'Distancetocarbehind', -1)
 
         if files == "Cooperation_1.csv":
@@ -61,11 +59,11 @@ def data_sifer(read_dir, write_dir, safe_distance1, safe_distance2, safe_distanc
 
         # if files == "Cooperation_2.csv":
 
-        #if files == "Cooperation_3.csv":
-            #data = data[['ParticipantID', 'Othercarletin', 'Endedwithcollision']]
+        # if files == "Cooperation_3.csv":
+            # data = data[['ParticipantID', 'Othercarletin', 'Endedwithcollision']]
 
         if files == "Trust_1.csv":
-            #data = data[['ParticipantID', 'Distancetocarbehind']]
+            # data = data[['ParticipantID', 'Distancetocarbehind']]
             data = data[data.Distancetocarbehind != numpy.Inf]
             data.index = range(data.shape[0])
             for i in range(0, data['Distancetocarbehind'].count()):
@@ -74,9 +72,8 @@ def data_sifer(read_dir, write_dir, safe_distance1, safe_distance2, safe_distanc
                 else:
                     data.set_value(i, 'Distancetocarbehind', 0)
 
-
         if files == "Trust_2.csv":
-            #data = data[['ParticipantID', 'Distancetocarbehind', 'Distancetocarahead']]
+            # data = data[['ParticipantID', 'Distancetocarbehind', 'Distancetocarahead']]
             data = data[data.Distancetocarbehind != numpy.Inf]
             data = data[data.Distancetocarahead != numpy.Inf]
             data.index = range(data.shape[0])
@@ -93,11 +90,11 @@ def data_sifer(read_dir, write_dir, safe_distance1, safe_distance2, safe_distanc
                 else:
                     data.set_value(i, 'Distancetocarahead', 0)
 
-        #if files == "Trust_3.csv":
-            #data = data[['ParticipantID', 'Signalled']]
+        # if files == "Trust_3.csv":
+            # data = data[['ParticipantID', 'Signalled']]
 
         if files == "Trust_4.csv":
-            #data = data[['ParticipantID', 'Signalled', 'Distancetocarinadjacentlane']]
+            # data = data[['ParticipantID', 'Signalled', 'Distancetocarinadjacentlane']]
             for i in range(0, data['Distancetocarinadjacentlane'].count()):
                 if data['Distancetocarinadjacentlane'].ix[i] > safe_distance3:
                     data.set_value(i, 'Distancetocarinadjacentlane', 1)
@@ -105,7 +102,7 @@ def data_sifer(read_dir, write_dir, safe_distance1, safe_distance2, safe_distanc
                     data.set_value(i, 'Distancetocarinadjacentlane', 0)
 
         if files == "Trust_5.csv":
-            #data = data[['ParticipantID', 'Signalled', 'Distancetocarbehind']]
+            # data = data[['ParticipantID', 'Signalled', 'Distancetocarbehind']]
             for i in range(0, data['Distancetocarbehind'].count()):
                 if data['Distancetocarbehind'].ix[i] > safe_distance4:
                     data.set_value(i, 'Distancetocarbehind', 1)

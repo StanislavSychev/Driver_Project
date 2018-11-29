@@ -1,14 +1,25 @@
 import copy
-import numpy as np
 
 
 class Participant(object):
 
-    def __init__(self, lst=[], names=[], leng=[], driver_data={}):
-        self.scenario_list = lst
-        self.names = names
-        self.scenario_len = leng
-        self.driver_data = driver_data.copy()
+    def __init__(self, lst=None, names=None, leng=None, driver_data=None):
+        if lst is None:
+            self.scenario_list = []
+        else:
+            self.scenario_list = lst
+        if names is None:
+            self.names = []
+        else:
+            self.names = names
+        if leng is None:
+            self.scenario_len = []
+        else:
+            self.scenario_len = leng
+        if driver_data is None:
+            self.driver_data = []
+        else:
+            self.driver_data = driver_data.copy()
 
     def set_data(self, data):
         self.driver_data = data.copy()
@@ -23,6 +34,7 @@ class Participant(object):
         if not self.scenario_list[scenario_number]:
             return None
         s = float(len(self.scenario_list[scenario_number]))
+        res = []
         for keys in self.scenario_list[scenario_number]:
             if flag:
                 flag = False
@@ -51,16 +63,16 @@ class Participant(object):
                     sum_lst = [-1] * self.scenario_len[i]
                 if len(sum_lst) != self.scenario_len[i]:
                     print "wtf"
-                #print len(sum_lst)
+                # print len(sum_lst)
                 j = 0
                 for items in sum_lst:
                     lst.append(items)
                     names.append(self.names[i] + ": " + str(j) + "/" + str(len(sum_lst) - 1))
                     j += 1
-        number_of_contexts = len(self.scenario_list[scenatio_number]) - 1
+        # number_of_contexts = len(self.scenario_list[scenatio_number]) - 1
 
-        #names.append("context " + str(number_of_contexts))
-        #res = ([], [], names)
+        # names.append("context " + str(number_of_contexts))
+        # res = ([], [], names)
         res0 = []
         res1 = []
         flag = True
