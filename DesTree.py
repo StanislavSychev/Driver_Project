@@ -26,7 +26,7 @@ for i in range(len(scens)):
             Y_dict[keys] = XY[1]
             names = XY[2]
     driver_keys = X_dict.keys()
-    kf = KFold(n_splits=10)
+    kf = KFold(n_splits=10, shuffle=True, random_state=42)
     kf.get_n_splits(driver_keys)
     dtr = DecisionTreeClassifier()
     for train, test in kf.split(driver_keys):

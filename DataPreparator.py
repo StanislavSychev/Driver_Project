@@ -16,12 +16,12 @@ def make_id_list(drc):
 
 
 def make_part_list():
-    qest_data = True
+    qest_data = False
     flag = True
     part_list = {}
     scen_list = []
     sourse_dir = "ParsedData"
-    ScenariosRader.scen_read("ScenariosFiles", "procData", sourse_dir, 20, 20, 10, 20)
+    ScenariosRader.scen_read("ScenariosFiles", "procData2", sourse_dir, 20, 20, 10, 20)
     uniqe_id = make_id_list(sourse_dir)
     for files in listdir("ScenariosFiles"):
         name_list = files

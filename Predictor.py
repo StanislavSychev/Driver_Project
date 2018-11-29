@@ -2,8 +2,8 @@ import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.impute import SimpleImputer
 from DataPreparator import make_part_list
-from sklearn.svm import SVC
-# from sklearn.naive_bayes import GaussianNB
+# from sklearn.svm import SVC
+from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import KFold
 
 
@@ -36,7 +36,7 @@ for i in range(len(scens)):
             Y_dict[keys] = XY[1]
             names = XY[2]
     driver_keys = X_dict.keys()
-    kf = KFold(n_splits=10)
+    kf = KFold(n_splits=10, shuffle=True, random_state=42)
     kf.get_n_splits(driver_keys)
     dtr = DecisionTreeClassifier()
     for train, test in kf.split(driver_keys):
@@ -67,16 +67,16 @@ for i in range(len(scens)):
         X_train = X_train[:-1:]
         # imp.fit(X_test)
         X_test = imp.transform(X_test)
-        pred = SVC()
-        # pred = GaussianNB()
+        # pred = SVC()
+        pred = GaussianNB()
         ac = get_score(pred, X_train, Y_train, X_test, Y_test)
         ac_list.append(ac)
         accuracy += ac
-    accuracy = accuracy / len(X_dict)
+    accuracy = accuracy / 10
     err = 0.0
     for item in ac_list:
         err += (item - accuracy) ** 2
-    err = (err ** 0.5) / len(X_dict)
+    err = (err ** 0.5) / 10
     acc_res[scens[i]] = scens[i] + ': ' + '%.2f' % accuracy + '\t%.2f' % err
 
 for keys in acc_res:
