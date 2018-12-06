@@ -2,8 +2,9 @@ import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.impute import SimpleImputer
 from DataPreparator import make_part_list
-# from sklearn.svm import SVC
-from sklearn.naive_bayes import GaussianNB
+from ScenariosRader import make_files
+from sklearn.svm import SVC
+# from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import KFold
 
 
@@ -17,7 +18,8 @@ def get_score(predictor, x_train, y_train, x_test, y_test):
     return ac_score / len(x_test)
 
 
-data = make_part_list()
+make_files("procData2", 20, 20, 10, 20)
+data = make_part_list(True)
 scens = data['scen']
 data = data['data']
 feat_imp = {}
@@ -67,8 +69,8 @@ for i in range(len(scens)):
         X_train = X_train[:-1:]
         # imp.fit(X_test)
         X_test = imp.transform(X_test)
-        # pred = SVC()
-        pred = GaussianNB()
+        pred = SVC()
+        # pred = GaussianNB()
         ac = get_score(pred, X_train, Y_train, X_test, Y_test)
         ac_list.append(ac)
         accuracy += ac

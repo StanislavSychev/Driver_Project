@@ -32,3 +32,17 @@ def scen_read(scen_dir, read_dir, write_dir, safe_distance1, safe_distance2, saf
             for j in range(un_out.shape[0]):
                 if out_data.ix[i].equals(un_out.ix[j]):
                     w.write(str(j) + "\n")
+
+
+def make_files(source, safe_distance1, safe_distance2, safe_distance3, safe_distance4):
+    scen_read("ScenariosFiles",
+              source,
+              "ParsedData",
+              safe_distance1,
+              safe_distance2,
+              safe_distance3,
+              safe_distance4)
+
+
+if __name__ == '__main__':
+    make_files(20, 20, 10, 20)
