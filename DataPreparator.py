@@ -47,12 +47,11 @@ def make_part_list(qest_data, neded_keys=None):
     quest_names = []
     if qest_data:
         driver_data = pandas.read_csv("questionnaireData/preQuestionnaire.csv", index_col=0)
-        quest_names = driver_data.columns.values.tolist()
+        quest_names = driver_data.drop(columns=['ID']).columns.values.tolist()
         driver_data = driver_data.fillna(0)
         driver_data = driver_data.replace({'gender': r'^[f|F].*'}, {'gender': 1}, regex=True)
         driver_data = driver_data.replace({'gender': r'^[m|M].*'}, {'gender': 2}, regex=True)
         driver_data = driver_data.replace({'gender': r'^h.*'}, {'gender': 0}, regex=True)
-        # neded_keys = ['drive_exp', 'drive_freq']
         for key in part_list:
             id_data = driver_data[driver_data.ID == key]
             id_data = id_data.drop(columns=['ID'])

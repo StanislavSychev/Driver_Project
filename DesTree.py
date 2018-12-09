@@ -62,7 +62,7 @@ def run_des_tree(to_print, to_quest=False, needed_quest=None, save_tree=False):
             feat_train = imp.transform(feat_train)
             feat_train = feat_train[:-1:]
             feat_test = imp.transform(feat_test)
-            dtr = DecisionTreeClassifier()
+            dtr = DecisionTreeClassifier(criterion='entropy')
             dtr.fit(feat_train, res_train)
             ac = 0
             for x_test, y_test in zip(feat_test, res_test):
@@ -118,8 +118,8 @@ def run_des_tree(to_print, to_quest=False, needed_quest=None, save_tree=False):
     for name in quest_importance:
         quest_importance[name] = quest_importance[name] / 12
     quest_importance = [(k, quest_importance[k]) for k in sorted(quest_importance,
-                                                                 key=quest_importance.get,
-                                                                 reverse=True)]
+                                                                 key=quest_importance.get)]
+                                                                 # reverse=True)]
     if to_print:
         for keys in acc_res:
             print acc_res[keys]
@@ -131,5 +131,5 @@ def run_des_tree(to_print, to_quest=False, needed_quest=None, save_tree=False):
 
 
 if __name__ == '__main__':
-    make_files("procData2", 20, 20, 10, 20)
+    # make_files("procData2", 20, 20, 10, 20)
     run_des_tree(True, True)

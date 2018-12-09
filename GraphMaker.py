@@ -24,14 +24,14 @@ def make_graph(x_list, y_list, e_list, pred_name):
 
 if __name__ == '__main__':
     tree = False
-    make_files("procData2", 20, 20, 10, 20)
+    # make_files("procData2", 20, 20, 10, 20)
     _, _, quest_list = run_des_tree(False, True)
     if tree:
         max_res, err, _ = run_des_tree(False, False)
-        name = 'ID3'
+        name = 'ID3_3'
     else:
         max_res, err = run_predict(False, False)
-        name = 'SVM'
+        name = 'SVM_3'
     max_num = 0
     res_list = [max_res]
     err_list = [err]
@@ -41,8 +41,8 @@ if __name__ == '__main__':
     while j < len(quest_list):
         needed.append(quest_list[j][0])
         print j
-        if quest_list[j][1] == 0:
-            break
+        # if quest_list[j][1] == 0:
+        #     break
         if tree:
             res, err, _ = run_des_tree(False, True, needed)
         else:
