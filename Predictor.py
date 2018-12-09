@@ -5,20 +5,19 @@ from ScenariosRader import make_files
 from sklearn.svm import SVC
 # from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import KFold
+import pandas
+from DesTree import run_des_tree
 
 
 def get_score(predictor, x_train, y_train, x_test, y_test):
     if len(np.unique(y_train)) == 1:
         return -1
     predictor.fit(x_train, y_train)
-    ac_score = 0
-    for x, y in zip(x_test, y_test):
-        ac_score += predictor.score([x], [y])
-    return ac_score / len(x_test)
+    ac_score = predictor.score(x_test, y_test)
+    return ac_score
 
 
-def run_predict(to_print, to_quest=False, needed_quest=None):
-    data = make_part_list(to_quest, needed_quest)
+def run_predict(data, importnce_dict_input=None, feat_number=None, to_print=False):
     scens = data['scen']
     data = data['data']
     # feat_imp = {}
@@ -30,14 +29,14 @@ def run_predict(to_print, to_quest=False, needed_quest=None):
         ac_list = []
         feat_dict = {}
         res_dict = {}
-        # names = []
+        names = []
         for keys in data:
             # feat_res = data[keys].scens_to_list(i)
             feat_res = data[keys].most_prob(i)
             if feat_res:
                 feat_dict[keys] = feat_res[0]
                 res_dict[keys] = feat_res[1]
-                # names = feat_res[2]
+                names = feat_res[2]
         driver_keys = feat_dict.keys()
         kf = KFold(n_splits=10, shuffle=True, random_state=42)
         kf.get_n_splits(driver_keys)
@@ -69,6 +68,13 @@ def run_predict(to_print, to_quest=False, needed_quest=None):
             feat_train = feat_train[:-1:]
             # imp.fit(feat_test)
             feat_test = imp.transform(feat_test)
+
+            feat_train = pandas.DataFrame.from_records(feat_train, columns=names)
+            feat_test = pandas.DataFrame.from_records(feat_test, columns=names)
+
+            if importnce_dict_input:
+                feat_train = feat_train[importnce_dict_input[scens[i]][:feat_number]]
+                feat_test = feat_test[importnce_dict_input[scens[i]][:feat_number]]
             pred = SVC(gamma='scale')
             # pred = GaussianNB()
             ac = get_score(pred, feat_train, res_train, feat_test, res_test)
@@ -91,5 +97,7 @@ def run_predict(to_print, to_quest=False, needed_quest=None):
 
 
 if __name__ == '__main__':
-    make_files("procData2", 20, 20, 10, 20)
-    run_predict(True, True)
+    data = make_part_list(True)
+    _, _, res = run_des_tree(data)
+    print res
+    run_des_tree(data, res, 3, to_print=True)

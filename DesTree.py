@@ -6,10 +6,11 @@ from sklearn.impute import SimpleImputer
 from DataPreparator import make_part_list
 from ScenariosRader import make_files
 from sklearn.model_selection import KFold
+import pandas
 
 
-def run_des_tree(to_print, to_quest=False, needed_quest=None, save_tree=False):
-    data = make_part_list(to_quest, needed_quest)
+def run_des_tree(data, importnce_dict_input=None, feat_number=None, to_print=False, save_tree=False):
+    # data = make_part_list(to_quest, needed_quest)
     scens = data['scen']
     quest_names = data['quest']
     data = data['data']
@@ -62,15 +63,25 @@ def run_des_tree(to_print, to_quest=False, needed_quest=None, save_tree=False):
             feat_train = imp.transform(feat_train)
             feat_train = feat_train[:-1:]
             feat_test = imp.transform(feat_test)
+
+            feat_train = pandas.DataFrame.from_records(feat_train, columns=names)
+            feat_test = pandas.DataFrame.from_records(feat_test, columns=names)
+
+            if importnce_dict_input:
+                feat_train = feat_train[importnce_dict_input[scens[i]][:feat_number]]
+                feat_test = feat_test[importnce_dict_input[scens[i]][:feat_number]]
             dtr = DecisionTreeClassifier(criterion='entropy')
             dtr.fit(feat_train, res_train)
-            ac = 0
-            for x_test, y_test in zip(feat_test, res_test):
-                ac += dtr.score([x_test], [y_test])
+
+            ac = dtr.score(feat_test, res_test)
+            # ac = 0
+
+            # for x_test, y_test in zip(feat_test, res_test):
+            #     ac += dtr.score([x_test], [y_test])
             if len(feat_test) == 0:
                 print scens[i]
                 print res_test
-            ac = ac / len(feat_test)
+            # ac = ac / len(feat_test)
             ac_list.append(ac)
             accuracy += ac
         if not len(feat_dict):
@@ -99,14 +110,14 @@ def run_des_tree(to_print, to_quest=False, needed_quest=None, save_tree=False):
         for name, imp in zip(names, importance_list):
             if name in quest_importance.keys():
                 quest_importance[name] += imp
-            if name[-2] == '/':
-                key = name[:-5:]
-                if key not in imp_dct.keys():
-                    imp_dct[key] = 0
-                imp_dct[key] += imp
+            # if name[-2] == '/':
+            #     key = name[:-5:]
+            #     if key not in imp_dct.keys():
+            #         imp_dct[key] = 0
+            #     imp_dct[key] += imp
 
-            else:
-                imp_dct[name] = imp
+            # else:
+            imp_dct[name] = imp
         if sum(importance_list):
             lst = [(k, imp_dct[k]) for k in imp_dct]
             lst.sort(key=lambda x: x[1], reverse=True)
@@ -120,16 +131,24 @@ def run_des_tree(to_print, to_quest=False, needed_quest=None, save_tree=False):
     quest_importance = [(k, quest_importance[k]) for k in sorted(quest_importance,
                                                                  key=quest_importance.get)]
                                                                  # reverse=True)]
+    imp_res = {}
     if to_print:
         for keys in acc_res:
             print acc_res[keys]
-        for keys in feat_imp:
+    for keys in feat_imp:
+        if to_print:
             print keys
-            for item in feat_imp[keys]:
+        imp_res[keys] = []
+        for item in feat_imp[keys]:
+            if to_print:
                 print "\t" + item[0] + ": " + '%.2f' % item[1]
-    return av_ac, av_ci, quest_importance
+            imp_res[keys].append(item[0])
+    return av_ac, av_ci, imp_res
 
 
 if __name__ == '__main__':
     # make_files("procData2", 20, 20, 10, 20)
-    run_des_tree(True, True)
+    data = make_part_list(True)
+    _, _, res = run_des_tree(data)
+    print res
+    run_des_tree(data, res, 2, to_print=True)
