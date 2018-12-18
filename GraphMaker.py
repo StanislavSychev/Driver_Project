@@ -24,7 +24,7 @@ def make_graph(x_list, y_list, e_list, pred_name):
 
 
 if __name__ == '__main__':
-    tree = False
+    tree = True
     data = make_part_list(True)
     # make_files("procData2", 20, 20, 10, 20)
     _, _, quest_list = run_des_tree(data)

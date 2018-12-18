@@ -70,6 +70,19 @@ def run_des_tree(data, importnce_dict_input=None, feat_number=None, to_print=Fal
             if importnce_dict_input:
                 feat_train = feat_train[importnce_dict_input[scens[i]][:feat_number]]
                 feat_test = feat_test[importnce_dict_input[scens[i]][:feat_number]]
+
+            feat_train['res'] = pandas.Series(res_train)
+            feat_test['res'] = pandas.Series(res_test)
+
+            feat_train.drop_duplicates()
+            feat_test.drop_duplicates()
+
+            res_train = feat_train['res']
+            feat_train = feat_train.drop(columns=['res'])
+
+            res_test = feat_test['res']
+            feat_test = feat_test.drop(columns=['res'])
+
             dtr = DecisionTreeClassifier(criterion='entropy')
             dtr.fit(feat_train, res_train)
 
