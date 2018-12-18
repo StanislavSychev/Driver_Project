@@ -91,5 +91,5 @@ def run_predict(to_print, to_quest=False, needed_quest=None):
 
 
 if __name__ == '__main__':
-    make_files("procData2", 20, 20, 10, 20)
+    # make_files("procData2", 20, 20, 10, 20)
     run_predict(True, True)

@@ -22,7 +22,7 @@ def make_part_list(qest_data, neded_keys=None):
     scen_list = []
     # ScenariosRader.scen_read("ScenariosFiles", "procData2", sourse_dir, 20, 20, 10, 20)
     uniqe_id = make_id_list("ParsedData")
-    for files in listdir("ScenariosFiles"):
+    for files in listdir("ScenariosFiles2"):
         name_list = files
         scen_list.append(name_list)
         res = {}

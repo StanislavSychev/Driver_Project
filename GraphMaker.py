@@ -28,10 +28,10 @@ if __name__ == '__main__':
     _, _, quest_list = run_des_tree(False, True)
     if tree:
         max_res, err, _ = run_des_tree(False, False)
-        name = 'ID3_3'
+        name = 'ID3_without_some_context'
     else:
         max_res, err = run_predict(False, False)
-        name = 'SVM_3'
+        name = 'SVM_without_some_context'
     max_num = 0
     res_list = [max_res]
     err_list = [err]

@@ -131,5 +131,5 @@ def run_des_tree(to_print, to_quest=False, needed_quest=None, save_tree=False):
 
 
 if __name__ == '__main__':
-    # make_files("procData2", 20, 20, 10, 20)
+    make_files("procData2", 20, 20, 10, 20)
     run_des_tree(True, True)

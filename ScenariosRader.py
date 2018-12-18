@@ -35,7 +35,7 @@ def scen_read(scen_dir, read_dir, write_dir, safe_distance1, safe_distance2, saf
 
 
 def make_files(source, safe_distance1, safe_distance2, safe_distance3, safe_distance4):
-    scen_read("ScenariosFiles",
+    scen_read("ScenariosFiles2",
               source,
               "ParsedData",
               safe_distance1,
